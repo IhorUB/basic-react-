@@ -1,38 +1,67 @@
-import React, {Component} from 'react';
+import React, {Component, PureComponent} from 'react';
 
-class Article extends Component{
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         isOpen: true
-    //     }
+class Article extends PureComponent {
+    constructor(props) {
+        super(props);
+        this.state = {
+            // isOpen: props.defaultOpen,
+            count: 0
+        }
+    }
+
+    // state = {
+    //     isOpen: true
+    // };
+
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     return this.state.isOpen !== nextState.isOpen
     // }
-    state = {
-        isOpen: true
-    };
+
+    componentWillMount() {
+        console.log("mounting");
+    }
+
+    // componentWillReceiveProps(nextProps) {
+    //     console.log("receive props");
+    //     if (nextProps.defaultOpen !== this.props.defaultOpen) this.setState({
+    //         isOpen: nextProps.defaultOpen
+    //     })
+    // }
+
+    componentWillUpdate() {
+        console.log("update");
+    }
+
     render() {
-        const {article} = this.props;
-        const body =  this.state.isOpen && <section>{article.text}</section>;
+        const {article, isOpen, onButtonClick} = this.props;
+        const body = isOpen && <section className="card-text">{article.text}</section>;
+        const style = {width: "50%"};
         return (
-            <div>
-                <h2>{article.title}
-                    <button onClick={this.handleClick}>
-                        {this.state.isOpen ? 'close' : 'open'}
-                    </button>
-                </h2>
-                {body}
-                <h3>
-                    create date: {(new Date(article.date)).toDateString()}
-                </h3>
+            <div className="card mx-auto" style={style}>
+                <div className="card-header">
+                    <h2 onClick={this.incrementCounter}>
+                        {article.title}
+                        clicked {this.state.count}
+                        <button onClick={onButtonClick} className="btn btn-primary float-right">
+                            {isOpen ? 'close' : 'open'}
+                        </button>
+                    </h2>
+                </div>
+                <div className="card-body">
+                    <h6 className="card-subtitle text-muted">
+                        create date: {(new Date(article.date)).toDateString()}
+                    </h6>
+                    {body}
+                </div>
             </div>
         )
     }
-    handleClick = () => {
-        console.log("click");
+
+    incrementCounter = () => {
         this.setState({
-            isOpen: !this.state.isOpen
+            count: this.state.count + 1
         })
-    }
+    };
 }
 
 export default Article
